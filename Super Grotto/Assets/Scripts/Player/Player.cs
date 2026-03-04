@@ -9,6 +9,10 @@ public class Player : MonoBehaviour
     [SerializeField] private Vector2 deathKick = new Vector2(10f, 10f);
     [SerializeField] private bool isAlive = true;
 
+    [Header("Climbing Settings")]
+    [SerializeField] private float climbSpeed = 5f;
+    [SerializeField] private float gravityScaleAtStart;
+
     [Header("Ground Check Settings")]
     [SerializeField] private Transform groundCheck;
     [SerializeField] private float groundRadius;
@@ -21,7 +25,13 @@ public class Player : MonoBehaviour
     [SerializeField] private Transform firePointTransform;
 
     [Header("Inputs")]
-    [SerializeField] private float moveInput;
+    [SerializeField] private float moveInputX;
+    [SerializeField] private float moveInputY;
+
+    void Start()
+    {
+        gravityScaleAtStart = rb.gravityScale;
+    }
 
     void Update()
     {
@@ -30,14 +40,17 @@ public class Player : MonoBehaviour
             return;
         }
 
-        moveInput = Input.GetAxis("Horizontal");
+        moveInputX = Input.GetAxis("Horizontal");
+        moveInputY = Input.GetAxis("Vertical");
 
         Jump();
 
-        if(moveInput > 0 && transform.localScale.x < 0 || moveInput < 0 && transform.localScale.x > 0)
+        if(moveInputX > 0 && transform.localScale.x < 0 || moveInputX < 0 && transform.localScale.x > 0)
         {
             Flip();
         }
+
+        ClimbLadder();
 
         HandleAnimations();
 
@@ -50,7 +63,7 @@ public class Player : MonoBehaviour
         {
             return;
         }
-        rb.linearVelocity = new Vector2(moveInput * speed, rb.linearVelocity.y);
+        rb.linearVelocity = new Vector2(moveInputX * speed, rb.linearVelocity.y);
     }
 
     void Jump()
@@ -70,9 +83,26 @@ public class Player : MonoBehaviour
         firePointTransform.Rotate(0f, 180f, 0f);
     }
 
+    void ClimbLadder()
+    {
+        if(!rb.IsTouchingLayers(LayerMask.GetMask("Climbing")))
+        {
+            rb.gravityScale = gravityScaleAtStart;
+            animator.SetBool("isClimbing", false);
+            return;
+        }
+
+        Vector2 climbVelocity = new Vector2(rb.linearVelocity.x, moveInputY * climbSpeed);
+        rb.linearVelocity = climbVelocity;
+        rb.gravityScale = 0;
+
+        bool playerHasVerticalSpeed = Mathf.Abs(rb.linearVelocity.y) > Mathf.Epsilon;
+        animator.SetBool("isClimbing", playerHasVerticalSpeed);
+    }
+
     void  HandleAnimations()
     {
-        bool isMoving = Mathf.Abs(moveInput) > 0 && isGrounded;
+        bool isMoving = Mathf.Abs(moveInputX) > 0 && isGrounded;
 
         animator.SetBool("isIdling", !isMoving && isGrounded);
         animator.SetBool("isRunning", isMoving && isGrounded);

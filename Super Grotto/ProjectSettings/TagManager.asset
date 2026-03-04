@@ -14,7 +14,7 @@ TagManager:
   - UI
   - Ground
   - Enemies
-  - 
+  - Climbing
   - 
   - 
   - 
@@ -41,6 +41,15 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Background
+    uniqueID: 596650185
+    locked: 0
+  - name: Climbing
+    uniqueID: 3259011697
+    locked: 0
+  - name: Player
+    uniqueID: 278812315
     locked: 0
   m_RenderingLayers:
   - Default
