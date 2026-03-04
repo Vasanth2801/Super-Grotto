@@ -1,4 +1,3 @@
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -7,6 +6,8 @@ public class Player : MonoBehaviour
     [SerializeField] private float speed = 5f;
     [SerializeField] private float jumpForce = 10f;
     [SerializeField] private int facingDirection = 1;
+    [SerializeField] private Vector2 deathKick = new Vector2(10f, 10f);
+    [SerializeField] private bool isAlive = true;
 
     [Header("Ground Check Settings")]
     [SerializeField] private Transform groundCheck;
@@ -24,6 +25,11 @@ public class Player : MonoBehaviour
 
     void Update()
     {
+        if(!isAlive)
+        {
+            return;
+        }
+
         moveInput = Input.GetAxis("Horizontal");
 
         Jump();
@@ -34,10 +40,16 @@ public class Player : MonoBehaviour
         }
 
         HandleAnimations();
+
+        Death();
     }
 
     void FixedUpdate()
     {
+        if (!isAlive)
+        {
+            return;
+        }
         rb.linearVelocity = new Vector2(moveInput * speed, rb.linearVelocity.y);
     }
 
@@ -65,5 +77,15 @@ public class Player : MonoBehaviour
         animator.SetBool("isIdling", !isMoving && isGrounded);
         animator.SetBool("isRunning", isMoving && isGrounded);
         animator.SetBool("isJumping", rb.linearVelocity.y > 0.1);
+    }
+
+    void Death()
+    {
+        if(rb.IsTouchingLayers(LayerMask.GetMask("Enemies")))
+        {
+            isAlive = false;
+            rb.linearVelocity = deathKick;
+            animator.SetTrigger("Death");
+        }
     }
 }

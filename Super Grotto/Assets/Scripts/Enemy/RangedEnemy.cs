@@ -36,21 +36,4 @@ public class RangedEnemy : MonoBehaviour
             nextFireRate = Time.time + fireRate;
         }
     }
-
-    /*
-    IEnumerator Fire()
-    {
-        yield return new WaitForSeconds(bulletDelay);
-
-
-        GameObject enemyBullet = pooler.SpawnFromPools("EnemyBullet", firePoint.transform.position, Quaternion.identity);
-        Rigidbody2D rb = enemyBullet.GetComponent<Rigidbody2D>();
-        if (rb != null)
-        {
-            rb.AddForce(-transform.right * bulletForce, ForceMode2D.Impulse);
-        }
-
-        yield return new WaitForSeconds(bulletDelay);
-    }
-    */
 }
