@@ -61,11 +61,9 @@ public class Player : MonoBehaviour
     void  HandleAnimations()
     {
         bool isMoving = Mathf.Abs(moveInput) > 0 && isGrounded;
-        bool isIdleShooting = Input.GetKeyDown(KeyCode.K) && !isMoving;
 
         animator.SetBool("isIdling", !isMoving && isGrounded);
         animator.SetBool("isRunning", isMoving && isGrounded);
         animator.SetBool("isJumping", rb.linearVelocity.y > 0.1);
-        animator.SetBool("IdleShooting", isIdleShooting && isGrounded);
     }
 }

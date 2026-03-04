@@ -14,17 +14,10 @@ public class Bullet : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D collision)
     {
-        StartCoroutine(Delay());
-    }
-
-    IEnumerator Delay()
-    {
         gameObject.SetActive(false);
 
-        Instantiate(FX,transform.position,Quaternion.identity);
+        GameObject effect = Instantiate(FX,transform.position,Quaternion.identity);
 
-        yield return new WaitForSeconds(1);
-
-        Destroy(FX);
+        effect.SetActive(false);
     }
 }
