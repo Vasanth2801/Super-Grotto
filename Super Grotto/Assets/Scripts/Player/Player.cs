@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -15,6 +16,8 @@ public class Player : MonoBehaviour
 
     [Header("References")]
     [SerializeField] private Rigidbody2D rb;
+    [SerializeField] private Animator animator;
+    [SerializeField] private Transform firePointTransform;
 
     [Header("Inputs")]
     [SerializeField] private float moveInput;
@@ -29,6 +32,8 @@ public class Player : MonoBehaviour
         {
             Flip();
         }
+
+        HandleAnimations();
     }
 
     void FixedUpdate()
@@ -50,5 +55,17 @@ public class Player : MonoBehaviour
     {
         facingDirection *= -1;
         transform.localScale = new Vector3(transform.localScale.x * -1, transform.localScale.y, transform.localScale.z);
+        firePointTransform.Rotate(0f, 180f, 0f);
+    }
+
+    void  HandleAnimations()
+    {
+        bool isMoving = Mathf.Abs(moveInput) > 0 && isGrounded;
+        bool isIdleShooting = Input.GetKeyDown(KeyCode.K) && !isMoving;
+
+        animator.SetBool("isIdling", !isMoving && isGrounded);
+        animator.SetBool("isRunning", isMoving && isGrounded);
+        animator.SetBool("isJumping", rb.linearVelocity.y > 0.1);
+        animator.SetBool("IdleShooting", isIdleShooting && isGrounded);
     }
 }
