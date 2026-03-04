@@ -247,6 +247,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Screen 2 Loader
       objectReference: {fileID: 0}
+    - target: {fileID: 2787393471544144644, guid: 27ece1a963f0e8e4fb0835186bfb13e4, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3649274181012518306, guid: 27ece1a963f0e8e4fb0835186bfb13e4, type: 3}
       propertyPath: endTransition
       value: 
